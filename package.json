@@ -1,0 +1,31 @@
+{
+  "name": "crawler",
+  "version": "1.0.0",
+  "description": "A goganime crawler using bun",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "populate": "bun src/index.js",
+    "crawl": "bun populate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@consumet/extensions": "^1.7.0",
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
+    "colors": "^1.4.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.1",
+    "puppeteer": "^22.14.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
