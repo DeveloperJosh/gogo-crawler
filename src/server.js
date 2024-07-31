@@ -8,9 +8,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.get('/api/anime', async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
+app.get('/api/all', async (req, res) => {
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 20;
     const skip = (page - 1) * limit;
 
     try {
@@ -29,7 +29,7 @@ app.get('/api/anime', async (req, res) => {
     }
 });
 
-app.get('/api/anime/search', async (req, res) => {
+app.get('/api/search', async (req, res) => {
     const title = req.query.title;
 
     try {
@@ -39,6 +39,10 @@ app.get('/api/anime/search', async (req, res) => {
                 { id: { $regex: new RegExp(title, 'i') } }
             ]
         });
+
+        if (animes.length === 0) {
+            return res.status(404).json({ message: 'Anime not found' });
+        }
 
         const mappedAnimes = animes.map(anime => ({
             id: anime.id,
@@ -52,7 +56,7 @@ app.get('/api/anime/search', async (req, res) => {
     }
 });
 
-app.get('/api/anime/:id', async (req, res) => {
+app.get('/api/info/:id', async (req, res) => {
     const id = req.params.id;
 
     try {

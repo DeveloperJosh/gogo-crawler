@@ -54,7 +54,7 @@ const scrapeRecentAnime = async (initialPage = 1, initialType = 1, animeConfig =
         const list = [];
 
         for (const anime of recentAnime) {
-          const id = $(anime).find("a").attr("href")?.split("/")[1].split("-episode")[0];
+          let id = $(anime).find("a").attr("href")?.split("/")[1].split("-episode")[0];
           try {
             const animeDetails = await withRetry(() => scrapeAnimeDetails(id, animeConfig));
 
