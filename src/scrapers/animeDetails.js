@@ -34,24 +34,20 @@ export const scrapeAnimeDetails = async (id, animeConfig) => {
       .split(",")
       .map((name) => name.trim());
 
-    // Extract genres
     $("div.anime_info_body_bg > p:contains('Genre:') > a").each((i, elem) => {
       genres.push($(elem).attr("title").trim());
     });
 
-    // Determine sub or dub
     let subOrDub = 'sub';
     if (animeTitle.toLowerCase().includes("(dub)")) {
       subOrDub = 'dub';
     }
 
-    // Extract episode information
     const ep_start = $("#episode_page > li").first().find("a").attr("ep_start");
     const ep_end = parseInt($("#episode_page > li").last().find("a").attr("ep_end") ?? "0");
     const movie_id = $("#movie_id").attr("value");
     const alias = $("#alias_anime").attr("value");
 
-    // Fetch episode list
     const episodesPage = await axios.get(`${LIST_EPISODES_URL}?ep_start=${ep_start}&ep_end=${ep_end}&id=${movie_id}&default_ep=0&alias=${alias}`);
     const $$ = load(episodesPage.data);
 
@@ -63,7 +59,6 @@ export const scrapeAnimeDetails = async (id, animeConfig) => {
       });
     });
 
-    // Construct anime details object
     const animeDetails = {
       id: id,
       url: `${BASE_URL}/category/${id}`,

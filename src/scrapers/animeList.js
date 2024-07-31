@@ -2,27 +2,9 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import { scrapeAnimeDetails } from './animeDetails.js';
 import { logInfo, logError, logSuccess } from '../utils/logger.js';
+import { delay, withRetry } from '../utils/delay.js';
 
 const anime_list_url = 'https://gogoanime3.co/anime-list.html';
-
-// Retry logic wrapper
-const withRetry = async (fn, retries = 3, delay = 1000) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      return await fn();
-    } catch (err) {
-      if (i < retries - 1) {
-        logError(`Retrying operation... Attempt ${i + 2}/${retries}`);
-        await new Promise(res => setTimeout(res, delay));
-      } else {
-        throw err;
-      }
-    }
-  }
-};
-
-// Delay function
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const endTimer = (start, animeConfig) => {
   const end = performance.now();

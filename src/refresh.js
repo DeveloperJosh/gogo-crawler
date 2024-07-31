@@ -9,7 +9,7 @@ dotenv.config();
   try {
     validateEnvVariables();
     await connectToDB();
-    logSuccess('\nPlease note that this script will take up to 2 hours to complete.\n');
+    logSuccess('\nThis script will only go up to page 10 on all types\n');
     await scrapeRecentAnime().then(() => {
         logSuccess(`All types scraped successfully.`);
         process.exit(0);

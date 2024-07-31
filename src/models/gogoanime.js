@@ -4,7 +4,7 @@ const GogoEpisodeSchema = new mongoose.Schema({
   id: { type: String, required: true },
   number: { type: Number, required: true },
   url: { type: String },
-}, { _id: false }); 
+}, { _id: false });
 
 const GogoanimeSchema = new mongoose.Schema({
   id: { type: String, required: true },
@@ -20,7 +20,7 @@ const GogoanimeSchema = new mongoose.Schema({
   description: { type: String },
   totalEpisodes: { type: Number },
   episodes: { type: [GogoEpisodeSchema] },
-}, { strict: false, versionKey: false }); 
+}, { timestamps: true, versionKey: false });
 
 const Gogoanime = mongoose.model('Gogoanime', GogoanimeSchema);
 

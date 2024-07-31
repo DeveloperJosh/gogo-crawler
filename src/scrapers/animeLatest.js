@@ -2,26 +2,16 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import { scrapeAnimeDetails } from './animeDetails.js';
 import { logInfo, logError, logSuccess } from '../utils/logger.js';
+import { delay, withRetry } from '../utils/delay.js';
 
-const anime_recent_url = `https://ajax.gogocdn.net/ajax/page-recent-release.html`;
+const AJAX_URL = 'https://ajax.gogocdn.net/';
+const anime_recent_url = `${AJAX_URL}ajax/page-recent-release.html`;
 
-// Retry logic wrapper
-const withRetry = async (fn, retries = 3, delay = 1000) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      return await fn();
-    } catch (err) {
-      if (i < retries - 1) {
-        logError(`Retrying operation... Attempt ${i + 2}/${retries}`);
-        await new Promise(res => setTimeout(res, delay));
-      } else {
-        throw err;
-      }
-    }
-  }
+let new_anime_names = {
+  "kimi-to-boku-no-saigo-no-senjou-aruiwa-sekai-ga-hajimaru-seisen-season-ii": "kimi-to-boku-no-saigo-no-senjou-aruiwa-sekai-ga-hajimaru-seisen-season-2",
+  "saint-october": "saint-october-",
+  // Add more anime names here if needed, This website's naming is so inconsistent..
 };
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const endTimer = (start, animeConfig) => {
   const end = performance.now();
@@ -55,6 +45,14 @@ const scrapeRecentAnime = async (initialPage = 1, initialType = 1, animeConfig =
 
         for (const anime of recentAnime) {
           let id = $(anime).find("a").attr("href")?.split("/")[1].split("-episode")[0];
+          // if id is in the new_anime_names object, replace it
+          if (new_anime_names[id]) {
+            logInfo(`Replacing ${id} with ${new_anime_names[id]}`);
+            id = new_anime_names[id];
+          }
+          //if (id === "saint-october") {
+          //  id = "saint-october-";
+         // }
           try {
             const animeDetails = await withRetry(() => scrapeAnimeDetails(id, animeConfig));
 
@@ -62,7 +60,7 @@ const scrapeRecentAnime = async (initialPage = 1, initialType = 1, animeConfig =
               list.push(animeDetails);
             }
           } catch (err) {
-            logError(`Failed to fetch details for anime with ID ${id}: ${err.message}`);
+            logError(`[SKIPING] Failed to fetch details for anime with ID ${id}: ${err.message}`);
           }
             await delay(2000);
         }
