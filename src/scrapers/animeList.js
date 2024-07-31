@@ -40,7 +40,7 @@ export const scrapeAnimeList = async (page = 1, animeConfig = { animeAdded: 0, a
         } catch (err) {
           logError(`Error scraping details for anime ID ${animeId}: ${err.message}`);
         }
-        await delay(2000);
+        await delay(1000);
       }
     }
 
