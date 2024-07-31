@@ -77,13 +77,22 @@ export const scrapeAnimeDetails = async (id, animeConfig) => {
     };
     const anime = await Gogoanime.findOne({ id: animeDetails.id });
     if (anime) {
-      await Gogoanime.updateOne({ id: animeDetails.id }, { $set: animeDetails });
-      animeConfig.animeUpdated++;
-      logInfo(`Updating [${animeDetails.title} - ${animeDetails.subOrDub}]...`);
+
+      try { 
+        await Gogoanime.updateOne({ id: animeDetails.id }, { $set: animeDetails });
+        animeConfig.animeUpdated++;
+        logInfo(`Updating [${animeDetails.title} - ${animeDetails.subOrDub}]...`);
+      } catch (err) {
+        logError(`Error updating anime details for ${id}: ${err.message}`);
+      }
     } else {
-      await Gogoanime.create(animeDetails);
-      animeConfig.animeAdded++;
-      logInfo(`Inserting [${animeDetails.title} - ${animeDetails.subOrDub}]...`);
+      try {
+        await Gogoanime.create(animeDetails);
+        animeConfig.animeAdded++;
+        logInfo(`Inserting [${animeDetails.title} - ${animeDetails.subOrDub}]...`);
+      } catch (err) {
+        logError(`Error inserting anime details for ${id}: ${err.message}`);
+      }
     }
 
     return animeDetails;
