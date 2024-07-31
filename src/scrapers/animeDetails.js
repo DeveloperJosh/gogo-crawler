@@ -22,6 +22,10 @@ export const scrapeAnimeDetails = async (id, animeConfig) => {
     const type = $("div.anime_info_body_bg > p:contains('Type:') > a").text().trim();
     const desc = $("div.anime_info_body_bg > div.description").text().replace("Plot Summary: ", "").trim();
     const releasedDate = parseInt($("div.anime_info_body_bg > p:contains('Released:')").text().replace("Released: ", "").trim(), 10);
+    // if can't find released date, set it to 0
+    if (isNaN(releasedDate)) {
+      releasedDate = 0;
+    }
     const status = $("div.anime_info_body_bg > p:contains('Status:') > a").text().trim();
     const otherName = $("div.anime_info_body_bg > p:contains('Other name:')")
       .text()

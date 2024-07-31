@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "populate": "bun src/index.js",
-    "crawl": "bun populate"
+    "crawl": "bun populate",
+    "server": "bun src/server.js"
   },
   "keywords": [],
   "author": "",
