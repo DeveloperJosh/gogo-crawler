@@ -21,7 +21,6 @@ const withRetry = async (fn, retries = 3, delay = 1000) => {
   }
 };
 
-// Delay function
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const endTimer = (start, animeConfig) => {
@@ -38,62 +37,51 @@ const endTimer = (start, animeConfig) => {
   logSuccess(`\nPage scraped: ${animeConfig.animeAdded} anime(s) added, ${animeConfig.animeUpdated} anime(s) updated. Time taken: ${timeTaken}.\n`);
 };
 
-const scrapeRecentAnime = async (page = 1, type = 1, animeConfig = { animeAdded: 0, animeUpdated: 0 }) => {
+const scrapeRecentAnime = async (initialPage = 1, initialType = 1, animeConfig = { animeAdded: 0, animeUpdated: 0 }) => {
   const start = performance.now();
+  let page = initialPage;
+  let type = initialType;
 
-  const url = `${anime_recent_url}?page=${page}&type=${type}`;
-  logInfo(`Scraping anime page ${page} - type ${type}\n`);
+  while (type <= 3) {
+    while (page <= 10) {
+      const url = `${anime_recent_url}?page=${page}&type=${type}`;
+      logInfo(`Scraping anime page ${page} - type ${type}\n`);
 
-  try {
-    const { data } = await axios.get(url);
-    const $ = load(data);
-    const recentAnime = $("div.last_episodes.loaddub > ul > li");
-    const list = [];
-
-    for (const anime of recentAnime) {
-      const id = $(anime).find("a").attr("href")?.split("/")[1].split("-episode")[0];
       try {
-        const animeDetails = await withRetry(() => scrapeAnimeDetails(id, animeConfig));
+        const { data } = await axios.get(url);
+        const $ = load(data);
+        const recentAnime = $("div.last_episodes.loaddub > ul > li");
+        const list = [];
 
-        if (animeDetails) {
-          list.push(animeDetails);
+        for (const anime of recentAnime) {
+          const id = $(anime).find("a").attr("href")?.split("/")[1].split("-episode")[0];
+          try {
+            const animeDetails = await withRetry(() => scrapeAnimeDetails(id, animeConfig));
+
+            if (animeDetails) {
+              list.push(animeDetails);
+            }
+          } catch (err) {
+            logError(`Failed to fetch details for anime with ID ${id}: ${err.message}`);
+          }
+            await delay(2000);
         }
+
+        endTimer(start, animeConfig);
+
       } catch (err) {
-        logError(`Failed to fetch details for anime with ID ${id}: ${err.message}`);
-      }
-    }
-
-    endTimer(start, animeConfig);
-
-    if (page < 10) {
-      await delay(1000);
-      await scrapeRecentAnime(page + 1, type, animeConfig);
-    } else {
-      if (type < 3) {
-        await delay(1000);
-        await scrapeRecentAnime(1, type + 1, animeConfig);
-      } else {
-        logSuccess(`All types scraped successfully.`);
-      }
-    }
-
-  } catch (err) {
-    if (err.response && err.response.status === 404) {
-      logError(`Page ${page} not found (404). Skipping.`);
-      if (page < 10) {
-        await delay(1000);
-        await scrapeRecentAnime(page + 1, type, animeConfig);
-      } else {
-        if (type < 3) {
-          await delay(1000);
-          await scrapeRecentAnime(1, type + 1, animeConfig);
+        if (err.response && err.response.status === 404) {
+          logError(`Page ${page} not found (404). Skipping.`);
         } else {
-          logSuccess(`All types scraped successfully.`);
+          logError(`Error scraping anime list page ${page}: ${err.message}`);
         }
       }
-    } else {
-      logError(`Error scraping anime list page ${page}: ${err.message}`);
+
+      page++;
     }
+
+    page = 1;
+    type++;
   }
 };
 

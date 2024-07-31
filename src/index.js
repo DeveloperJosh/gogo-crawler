@@ -2,9 +2,8 @@ import { scrapeAnimeList } from './scrapers/animeList.js';
 import { validateEnvVariables } from './validators/envCheck.js';
 import { logError, logSuccess } from './utils/logger.js';
 import dotenv from 'dotenv';
-dotenv.config();
-
 import connectToDB from './config/db.js';
+dotenv.config();
 
 (async () => {
   try {
