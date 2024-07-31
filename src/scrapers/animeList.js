@@ -21,6 +21,9 @@ const withRetry = async (fn, retries = 3, delay = 1000) => {
   }
 };
 
+// Delay function
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 const endTimer = (start, animeConfig) => {
   const end = performance.now();
   const timeInSeconds = ((end - start) / 1000).toFixed(2);
@@ -55,12 +58,12 @@ export const scrapeAnimeList = async (page = 1, animeConfig = { animeAdded: 0, a
         } catch (err) {
           logError(`Error scraping details for anime ID ${animeId}: ${err.message}`);
         }
+        await delay(2000);
       }
     }
 
     endTimer(start, animeConfig);
 
-    // Recursively scrape the next page
     if (page < 100) {
       await scrapeAnimeList(page + 1, animeConfig);
     }

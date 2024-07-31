@@ -21,7 +21,7 @@ export const scrapeAnimeDetails = async (id, animeConfig) => {
     const animeImage = $("div.anime_info_body_bg > img").attr("src");
     const type = $("div.anime_info_body_bg > p:contains('Type:') > a").text().trim();
     const desc = $("div.anime_info_body_bg > div.description").text().replace("Plot Summary: ", "").trim();
-    const releasedDate = parseInt($("div.anime_info_body_bg > p:contains('Released:')").text().replace("Released: ", "").trim(), 10);
+    let releasedDate = parseInt($("div.anime_info_body_bg > p:contains('Released:')").text().replace("Released: ", "").trim(), 10);
     // if can't find released date, set it to 0
     if (isNaN(releasedDate)) {
       releasedDate = 0;
@@ -81,7 +81,6 @@ export const scrapeAnimeDetails = async (id, animeConfig) => {
     };
     const anime = await Gogoanime.findOne({ id: animeDetails.id });
     if (anime) {
-
       try { 
         await Gogoanime.updateOne({ id: animeDetails.id }, { $set: animeDetails });
         animeConfig.animeUpdated++;
