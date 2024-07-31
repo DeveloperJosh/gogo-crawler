@@ -1,6 +1,6 @@
 # Gogo Crawler
 
-Gogo Crawler is a web crawling tool designed 
+Gogo Crawler is a web crawling tool designed to crawl the web and store the data in a MongoDB database. 
 
 ## Table of Contents
 
@@ -8,6 +8,7 @@ Gogo Crawler is a web crawling tool designed
 - [Installation](#installation)
 - [Setup](#setup)
 - [Usage](#usage)
+- [Credits](#credits)
 
 ## Prerequisites
 
@@ -49,3 +50,7 @@ To start the Gogo Crawler, run the following command:
 bun crawl
 ```
 And that's it! The crawler will start crawling the web and storing the data in your MongoDB database.
+
+## Credits
+
+This project was inspired by the [anime-crawler](https://github.com/riimuru/anime-crawler) project by [riimuru](https://github.com/riimuru).
