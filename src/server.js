@@ -43,8 +43,14 @@ app.get('/api/search/:title', async (req, res) => {
             ]
         };
 
-        if (type) {
-            searchQuery.type = type;
+        const typeMapping = {
+            1: 'sub',
+            2: 'dub',
+            3: 'chinese'
+        };
+
+        if (!isNaN(type)) {
+            searchQuery.subOrDub = typeMapping[type]; 
         }
 
         const animes = await Gogoanime.find(searchQuery)
@@ -59,7 +65,7 @@ app.get('/api/search/:title', async (req, res) => {
             id: anime.id,
             title: anime.title,
             image: anime.image,
-            type: anime.subOrDub,
+            type: anime.subOrDub, 
         }));
 
         res.json(mappedAnimes);
