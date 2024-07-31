@@ -1,4 +1,4 @@
-const colors = require('colors');
+import colors from 'colors';
 
 const colorMapping = {
   info: 'cyan',

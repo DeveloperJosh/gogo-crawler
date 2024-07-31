@@ -1,7 +1,8 @@
 import { logInfo, logError } from '../utils/logger.js';
 
 export const validateEnvVariables = () => {
-  logInfo("Checking environment variables...");
+  console.clear();
+  logInfo("Checking environment variables...\n");
 
   const requiredVariables = ["MONGO_URI"];
   const missingVariables = requiredVariables.filter(variable => !process.env[variable]);

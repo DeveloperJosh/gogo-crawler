@@ -1,4 +1,4 @@
-import { logError } from './logger';
+import { logError } from './logger.js';
 
 export const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
