@@ -9,8 +9,8 @@ dotenv.config();
   try {
     validateEnvVariables();
     await connectToDB();
-    logSuccess('\nPlease note that this script will take up to 2 hours to complete.\n');
-    await scrapeAnimeList(1).then(() => {
+    logSuccess('\nPlease note that this script will take up to 2/4 hours to complete.\n');
+    await scrapeAnimeList().then(() => {
       logSuccess('Scraping completed successfully.');
       process.exit(0);
   }).catch((err) => {
