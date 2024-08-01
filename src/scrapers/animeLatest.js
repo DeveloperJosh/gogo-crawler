@@ -1,4 +1,4 @@
-import axios from 'axios';
+import get from '../utils/get.js';
 import { load } from 'cheerio';
 import { scrapeAnimeDetails } from './animeDetails.js';
 import { logInfo, logError, logSuccess } from '../utils/logger.js';
@@ -38,7 +38,7 @@ const scrapeRecentAnime = async (initialPage = 1, initialType = 1, animeConfig =
       logInfo(`Scraping anime page ${page} - type ${type}\n`);
 
       try {
-        const { data } = await axios.get(url);
+        const { data } = await get(url);
         const $ = load(data);
         const recentAnime = $("div.last_episodes.loaddub > ul > li");
         const list = [];

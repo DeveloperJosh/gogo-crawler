@@ -33,7 +33,6 @@ program
         }
         try {
             await connectToDB();
-
             await scrapeAnimeDetails(id, {});
             console.log('Anime added successfully');
             process.exit(0);

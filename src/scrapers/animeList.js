@@ -1,8 +1,9 @@
-import axios from 'axios';
+import get from '../utils/get.js';
 import { load } from 'cheerio';
 import { scrapeAnimeDetails } from './animeDetails.js';
-import { logInfo, logError, logSuccess } from '../utils/logger.js';
+import { logError, logSuccess } from '../utils/logger.js';
 import { delay, withRetry } from '../utils/delay.js';
+import randomUserAgent from '../utils/header.js';
 
 const anime_list_url = 'https://gogoanime3.co/anime-list.html';
 
@@ -27,7 +28,7 @@ export const scrapeAnimeList = async (page = 1, animeConfig = { animeAdded: 0, a
   logSuccess(`Scraping anime list page ${page}...\n`);
 
   try {
-    const { data } = await axios.get(url);
+    const { data } = await get(url, { headers: randomUserAgent() });
     const $ = load(data);
     const animeList = $("div.anime_list_body > ul > li");
 
