@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import { scrapeAnimeDetails } from './scrapers/index.js';
 import { validateEnvVariables } from './validators/envCheck.js';
+import { Gogoanime } from './models/gogoanime.js';
 import connectToDB from './config/db.js';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -8,6 +9,7 @@ dotenv.config();
 const program = new Command();
 
 validateEnvVariables();
+await connectToDB();
 
 program
     .name('crawler cli')
@@ -32,12 +34,27 @@ program
             process.exit(1);
         }
         try {
-            await connectToDB();
             await scrapeAnimeDetails(id, {});
             console.log('Anime added successfully');
             process.exit(0);
         } catch (err) {
             console.error(`Error adding anime: ${err.message}`);
+            process.exit(1);
+        }
+    });
+
+program
+   .command('info')
+    .alias('i')
+    .description('Get information about the database')
+    .action(async () => {
+        try {
+            const count = await Gogoanime.countDocuments();
+            let animeInfo = `Total number of animes: ${count}\nDatabase: MongoDB\nModel: GoGoAnime\n`;
+            console.log(animeInfo);
+            process.exit(0);
+        } catch (err) {
+            console.error(`Error getting database information: ${err.message}`);
             process.exit(1);
         }
     });
