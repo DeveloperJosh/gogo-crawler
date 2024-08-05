@@ -34,7 +34,7 @@ const processAnime = async (anime, animeConfig, delayMs) => {
     } catch (err) {
       logError(`Error scraping details for anime ID ${animeId}: ${err.message}`);
     }
-    await delay(delayMs); // Delay between each request to prevent being blocked
+    await delay(delayMs);
   }
 };
 
