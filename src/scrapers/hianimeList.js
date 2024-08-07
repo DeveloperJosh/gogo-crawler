@@ -16,8 +16,8 @@ const fetchFilmDetails = async (page) => {
     const filmDetails = [];
     $('.film-detail .film-name a').each((index, element) => {
       let filmHref = $(element).attr('href').trim();
-      filmHref = filmHref.replace(/^\//, '');
-      filmDetails.push(filmHref);
+      no_start = filmHref.replace(/^\//, '');
+      filmDetails.push(no_start);
     });
 
     return filmDetails;
