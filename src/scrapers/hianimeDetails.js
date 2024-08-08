@@ -58,8 +58,6 @@ export const fetchHianimeDetails = async (href) => {
       })).get()
     };
 
-    //console.log(animeDetails);
-
     await saveAnimeDetails(animeDetails);
 
   } catch (error) {
